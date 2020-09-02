@@ -2,10 +2,28 @@ var autoSuggest = document.querySelector("#auto-suggest");
 
 var variables = ["variable1", "variable2", "foo", "bar"];
 
+function handleItemClick(node, editorNode, currentWord) {
+    var value = node.innerText,
+        editorValue = editorNode.innerText,
+        wordIndex = currentWord.index;
+
+    // replace current word with new value
+    var start = wordIndex,
+        end = wordIndex + currentWord[0].length;
+
+    editorNode.innerText = editorValue.substring(0, start) + value + editorValue.substring(end);
+
+    // reset cursor position
+    setCaretPosition(editorNode, wordIndex + value.length)
+
+}
+
 autoSuggest.addEventListener("input", function (event) {
   // todo(pinussilvestrus): handle if not typing expression
+  var editorNode = event.target,
+      currentCursorPositon = getCaretPosition(editorNode);
 
-  var currentWord = (getCurrentlyTypedWord(event) || []);
+  var currentWord = (getCurrentlyTypedWord(editorNode, currentCursorPositon) || []);
 
   var results = [];
 
@@ -18,25 +36,35 @@ autoSuggest.addEventListener("input", function (event) {
   }
 
   var list = document.querySelector('.auto-suggest-list');
-
   while (list.lastElementChild) {
     list.removeChild(list.lastElementChild);
   }
 
-  results.forEach(function(variable) {
-      var node = document.createElement('div');
-      node.innerText = variable;
-      list.appendChild(node)
-  })
+  if(!results.length) {
+    return list.classList.remove('visible');
+  } else {
+    list.classList.add('visible');
+
+    results.forEach(function(variable) {
+        var node = document.createElement('div');
+        node.innerText = variable;
+        node.className = 'auto-suggest-list-item';
+
+        list.appendChild(node);
+
+        node.addEventListener('click', function(e) {
+            handleItemClick(e.target, editorNode, currentWord, currentCursorPositon);
+        })
+    })
+  }
+  
 });
 
 // helpers ////////////////
 
-function getCurrentlyTypedWord(event) {
-  var target = event.target,
-    value = target.innerText,
-    allWords = findWords(value),
-    currentCursorPositon = getCaretPosition(target);
+function getCurrentlyTypedWord(node, currentCursorPositon) {
+  var value = node.innerText,
+    allWords = findWords(value);
 
   return allWords.find(function (word) {
     var index = word.index,
@@ -68,22 +96,23 @@ function getCaretPosition(contentEditable) {
   return range.toString().length - 1;
 }
 
-// function getCaretPosition() {
-//   if (window.getSelection && window.getSelection().getRangeAt) {
-//     var range = window.getSelection().getRangeAt(0);
-//     var selectedObj = window.getSelection();
-//     var rangeCount = 0;
-//     var childNodes = selectedObj.anchorNode.parentNode.childNodes;
-//     for (var i = 0; i < childNodes.length; i++) {
-//       if (childNodes[i] == selectedObj.anchorNode) {
-//         break;
-//       }
-//       if (childNodes[i].outerHTML) rangeCount += childNodes[i].outerHTML.length;
-//       else if (childNodes[i].nodeType == 3) {
-//         rangeCount += childNodes[i].textContent.length;
-//       }
-//     }
-//     return range.startOffset + rangeCount;
-//   }
-//   return -1;
-// }
+function setCaretPosition(contentEditable, position) {
+    // Creates range object 
+    var range = document.createRange(); 
+              
+    // Creates object for selection 
+    var selection = window.getSelection(); 
+      
+    // Set start position of range 
+    range.setStart(contentEditable.childNodes[0], position); 
+      
+    // Collapse range within its boundary points 
+    // Returns boolean 
+    range.collapse(true); 
+      
+    // Remove all ranges set 
+    selection.removeAllRanges(); 
+      
+    // Add range with respect to range object. 
+    selection.addRange(range); 
+}
