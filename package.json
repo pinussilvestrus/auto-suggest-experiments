@@ -1,0 +1,24 @@
+{
+  "name": "auto-suggest-experiments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": " http-server . -p 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pinussilvestrus/auto-suggest-experiments.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pinussilvestrus/auto-suggest-experiments/issues"
+  },
+  "homepage": "https://github.com/pinussilvestrus/auto-suggest-experiments#readme",
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}

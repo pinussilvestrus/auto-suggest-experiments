@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <h3>Autosuggest experiment</h3>
+
+    <div class="parameter">
+      <p class="header">Input Parameter</p>
+
+      <div class="entry">
+        <label>Name</label>
+        <input type="text" value="input_123" />
+      </div>
+
+      <div class="entry">
+        <label>Assignment Type</label>
+        <select disabled>
+          <option selected>Text</option>
+        </select>
+      </div>
+
+      <div class="entry">
+        <label>Value</label>
+        <div id="auto-suggest" contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+        <div class="auto-suggest-list"></div>
+      </div>
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
