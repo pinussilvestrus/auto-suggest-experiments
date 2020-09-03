@@ -40,6 +40,7 @@ autoSuggest.addEventListener("input", function (event) {
     list.removeChild(list.lastElementChild);
   }
 
+  // todo(pinussilvestrus): display at cursor position, not at beginning of input
   if(!results.length) {
     return list.classList.remove('visible');
   } else {
